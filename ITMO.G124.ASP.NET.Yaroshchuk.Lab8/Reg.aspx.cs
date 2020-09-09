@@ -1,0 +1,56 @@
+﻿using System;
+using System.Web.UI;
+
+namespace ITMO.G124.ASP.NET.Yaroshchuk.Lab1
+{
+    public partial class Reg : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (IsPostBack)
+            {
+                Page.Validate();
+                if (!Page.IsValid)
+                    return;
+
+                GuestResponse rsvp = new GuestResponse(name.Text,
+                email.Text, phone.Text, CheckBoxYN.Checked);
+
+                ResponseRepository.GetRepository().AddResponse(rsvp);
+
+                if (CheckBoxYN.Checked)
+                {
+                    Report report1 = new Report(TextBoxTitle.Text, TextBoxTextAnnot.Text);
+                    rsvp.Reports.Add(report1);
+                }
+
+                if (TextBoxTitle2.Text != "" || TextBoxTextAnnot2.Text != "")
+                {
+                    Report report2 = new Report(TextBoxTitle2.Text, TextBoxTextAnnot2.Text);
+                    rsvp.Reports.Add(report2);
+                }
+
+                try
+                {
+                    SampleContext context = new SampleContext();
+                    context.GuestResponses.Add(rsvp);
+                    context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    ExcpLabel.Text = ex.Message;
+                    //Response.Redirect(ex.Message); 
+                }
+
+                if (rsvp.WillAttend.HasValue && rsvp.WillAttend.Value)
+                {
+                    Response.Redirect("seeyouthere.html");
+                }
+                else
+                {
+                    Response.Redirect("sorryyoucantcome.html");
+                }
+            }
+        }
+    }
+}
