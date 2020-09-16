@@ -1,0 +1,13 @@
+﻿@model ITMO.G124.Yaroshchuk.WebMVCR1.Models.Person
+
+@{
+    Layout = "~/Views/_BasicLayout.cshtml";
+    ViewBag.Title = "Главная";
+}
+
+    <div>
+        <h1>Здравствуйте, @Model.ToString()!</h1>
+        <p>
+            @Html.ActionLink("На главную", "Index")
+        </p>
+    </div>
